@@ -40,6 +40,11 @@ abstract contract UUPSUpgradeable is Initializable, IERC1822Proxiable {
     error UUPSUnsupportedProxiableUUID(bytes32 slot);
 
     /**
+     * @dev Only the admin can upgrade the contract.
+     */
+    error OnlyAdminCanUpgrade();
+
+    /**
      * @dev Check that the execution is being performed through a delegatecall call and that the execution context is
      * a proxy contract with an implementation (as defined in ERC-1967) pointing to self. This should only be the case
      * for UUPS and transparent proxies that are using the current contract as their implementation. Execution of a
@@ -57,6 +62,14 @@ abstract contract UUPSUpgradeable is Initializable, IERC1822Proxiable {
      */
     modifier notDelegated() {
         _checkNotDelegated();
+        _;
+    }
+
+    /**
+     * @dev Only the admin can call the function.
+     */
+    modifier onlyAdmin() {
+        _checkAdmin();
         _;
     }
 
@@ -88,6 +101,15 @@ abstract contract UUPSUpgradeable is Initializable, IERC1822Proxiable {
     }
 
     /**
+     * @dev Change the admin of the contract.
+     *
+     * Emits an {AdminChanged} event.
+     */
+    function changeAdmin(address newAdmin) public onlyAdmin {
+        ERC1967Utils.changeAdmin(newAdmin);
+    }
+
+    /**
      * @dev Reverts if the execution is not performed via delegatecall or the execution
      * context is not of a proxy with an ERC-1967 compliant implementation pointing to self.
      */
@@ -108,6 +130,15 @@ abstract contract UUPSUpgradeable is Initializable, IERC1822Proxiable {
         if (address(this) != __self) {
             // Must not be called through delegatecall
             revert UUPSUnauthorizedCallContext();
+        }
+    }
+
+    /**
+     * @dev Reverts if the caller is not the admin.
+     */
+    function _checkAdmin() internal view virtual {
+        if (ERC1967Utils.getAdmin() != msg.sender) {
+            revert OnlyAdminCanUpgrade();
         }
     }
 

@@ -84,12 +84,11 @@ library ERC1967Utils {
         assembly {
             sstore(_ADMIN_SLOT, __admin)
         }
-
-        emit AdminChanged(getAdmin(), __admin);
     }
 
     function changeAdmin(address __admin) internal {
         _setAdmin(__admin);
+        emit AdminChanged(getAdmin(), __admin);
     }
 
     /**
