@@ -24,6 +24,9 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
     mapping(address parent => address[] children) private _subTokens;
     address[] private _allTokens;
 
+    uint256 public tokenCreationFee;
+    uint256 public tokenTradeFee;
+
     constructor() initializer { }
 
     function initialize(address _owner) public initializer {
@@ -68,9 +71,21 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
         return superToken != address(0) && superToken != subToken;
     }
 
-    function setMintFee(address token, uint256 fee) external onlyOwner { }
+    function setTokenCreationFee(uint256 fee) external onlyOwner {
+        if (fee == tokenCreationFee) {
+            revert FactorySameValueAlreadySet();
+        }
+        tokenCreationFee = fee;
+        emit TokenCreationFeeSet(fee);
+    }
 
-    function setTokenCreationFee(uint256 fee) external onlyOwner { }
+    function setTokenTradeFee(uint256 fee) external onlyOwner {
+        if (fee == tokenTradeFee) {
+            revert FactorySameValueAlreadySet();
+        }
+        tokenTradeFee = fee;
+        emit TokenTradeFeeSet(fee);
+    }
 
     function withdrawFees(address bondingCurve, address to, uint256 amount) external onlyOwner { }
 
