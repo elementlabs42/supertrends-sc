@@ -2,7 +2,7 @@
 pragma solidity ^0.8.29;
 
 import {IFactory} from "./Interfaces/IFactory.sol";
-import {ERC20} from "./ERC20.sol";
+import {Token} from "./Token.sol";
 import {BondingCurve} from "./BondingCurve.sol";
 
 contract Factory is IFactory {
@@ -51,7 +51,7 @@ contract Factory is IFactory {
         require(isCreatingSuperToken || isSuperToken(superToken), 'TF3B');
 
         bondingCurve = address(new BondingCurve());
-        ERC20 token = new ERC20(symbol, name, bondingCurve, DEFAULT_ERC20_SUPPLY);
+        Token token = new Token(symbol, name, DEFAULT_ERC20_SUPPLY, bondingCurve);
         IBondingCurve(bondingCurve).initialize(token, superToken, defaultCreationFee, defaultSwapFee, defaultListingFee, defaultListingReward, defaultDonationRate, defaultAmmFactory);
 
         getBondingCurve[token] = bondingCurve;

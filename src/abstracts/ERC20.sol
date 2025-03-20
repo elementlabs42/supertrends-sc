@@ -3,12 +3,10 @@
 
 pragma solidity ^0.8.20;
 
-import {Context} from "./utils/Context.sol";
-import {IERC20} from "./interfaces/IERC20.sol";
-import {IERC20Metadata} from "./interfaces/IERC20Metadata.sol";
-import {IERC20Errors} from "./interfaces/draft-IERC6093.sol";
-import {ERC20Permit} from "./abstracts/ERC20Permit.sol";
-import {ERC20Capped} from "./abstracts/ERC20Capped.sol";
+import {Context} from "../utils/Context.sol";
+import {IERC20} from "../interfaces/IERC20.sol";
+import {IERC20Metadata} from "../interfaces/IERC20Metadata.sol";
+import {IERC20Errors} from "../interfaces/draft-IERC6093.sol";
 
 /**
  * @dev Implementation of the {IERC20} interface.
@@ -29,7 +27,7 @@ import {ERC20Capped} from "./abstracts/ERC20Capped.sol";
  * applications.
  */
 
-abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors, ERC20Permit, ERC20Capped {
+abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
     mapping(address account => uint256) private _balances;
 
     mapping(address account => mapping(address spender => uint256)) private _allowances;

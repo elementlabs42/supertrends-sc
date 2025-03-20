@@ -4,7 +4,7 @@
 pragma solidity ^0.8.20;
 
 import {IERC20Permit} from "../Interfaces/IERC20Permit.sol";
-import {ERC20} from "../ERC20.sol";
+import {ERC20} from "./ERC20.sol";
 import {ECDSA} from "../utils/ECDSA.sol";
 import {EIP712} from "../utils/EIP712.sol";
 import {Nonces} from "../utils/Nonces.sol";
