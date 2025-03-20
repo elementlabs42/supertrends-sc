@@ -14,8 +14,7 @@ interface IFactory {
     function getAllTokensLength() external view returns (uint256);
     function isSuperToken(address token) external view returns (bool);
 
-    function createSuperToken(string memory name, string memory symbol) external returns (address);
-    function createSubToken(address superToken, string memory name, string memory symbol) external returns (address);
+    function createToken(string memory name, string memory symbol, address superToken) external returns (address);
 
     function setMintFee(address token, uint256 fee) external;
     function setTokenCreationFee(uint256 fee) external;

@@ -20,8 +20,8 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
     uint256 private constant DEFAULT_ERC20_SUPPLY = 1e27;
 
     mapping(address token => address bondingCurve) private _bondingCurves;
-    mapping(address subToken => address superToken) private _superTokens;
-    mapping(address superToken => address[] subTokens) private _subTokens;
+    mapping(address child => address parent) private _superTokens;
+    mapping(address parent => address[] children) private _subTokens;
     address[] private _allTokens;
 
     constructor() initializer { }
@@ -53,16 +53,11 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
         return _subTokens[superToken];
     }
 
+    /**
+     * @dev A token is a super token if it points to itself
+     */
     function isSuperToken(address token) public view returns (bool) {
-        return _superTokens[token] == address(0);
-    }
-
-    function createSuperToken(string memory name, string memory symbol) external returns (address) {
-        return createToken(name, symbol, address(0));
-    }
-
-    function createSubToken(address superToken, string memory name, string memory symbol) external returns (address) {
-        return createToken(name, symbol, superToken);
+        return _superTokens[token] == token;
     }
 
     function setMintFee(address token, uint256 fee) external onlyOwner { }
@@ -72,7 +67,7 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
     function withdrawFees(address bondingCurve, address to, uint256 amount) external onlyOwner { }
 
     function createToken(string memory name, string memory symbol, address superToken)
-        internal
+        external
         returns (address token)
     {
         bool isSubToken = superToken != address(0);
@@ -91,6 +86,7 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
             _subTokens[superToken].push(token);
             emit SubTokenCreated(token, superToken, msg.sender);
         } else {
+            _superTokens[token] = token;
             emit SuperTokenCreated(token, msg.sender);
         }
     }
