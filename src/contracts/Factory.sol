@@ -57,7 +57,15 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
      * @dev A token is a super token if it points to itself
      */
     function isSuperToken(address token) public view returns (bool) {
-        return _superTokens[token] == token;
+        return token != address(0) && _superTokens[token] == token;
+    }
+
+    /**
+     * @dev A token is a sub token if it points to a super token
+     */
+    function isSubToken(address subToken) public view returns (bool) {
+        address superToken = _superTokens[subToken];
+        return superToken != address(0) && superToken != subToken;
     }
 
     function setMintFee(address token, uint256 fee) external onlyOwner { }
@@ -70,8 +78,8 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
         external
         returns (address token)
     {
-        bool isSubToken = superToken != address(0);
-        if (isSubToken && !isSuperToken(superToken)) {
+        bool isSubTokenCreation = superToken != address(0);
+        if (isSubTokenCreation && !isSuperToken(superToken)) {
             revert FactoryMustBeSuperToken(superToken);
         }
 
@@ -81,7 +89,7 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
 
         _bondingCurves[token] = bondingCurve;
         _allTokens.push(token);
-        if (isSubToken) {
+        if (isSubTokenCreation) {
             _superTokens[token] = superToken;
             _subTokens[superToken].push(token);
             emit SubTokenCreated(token, superToken, msg.sender);

@@ -2,15 +2,12 @@
 pragma solidity ^0.8.29;
 
 import { ERC20Permit } from './abstracts/ERC20Permit.sol';
-import { Ownable } from './abstracts/Ownable.sol';
 import { IERC20Capped } from './interfaces/IERC20Capped.sol';
 
-contract TrendToken is ERC20Permit, Ownable, IERC20Capped {
+contract TrendToken is ERC20Permit, IERC20Capped {
     uint256 private immutable _cap;
 
     constructor(string memory name_, string memory symbol_, uint256 cap_, address mintTo) ERC20Permit(name_, symbol_) {
-        _setOwner(msg.sender);
-
         if (cap_ == 0) {
             revert ERC20InvalidCap(0);
         }
