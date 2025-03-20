@@ -21,9 +21,9 @@ interface IBondingCurve {
 
     event Donated(address to, uint256 amount);
 
-    event BondingCurveCreationFeeSet(uint256 fee);
+    event CreationFeeSet(uint256 fee);
 
-    event BondingCurveSwapFeeSet(uint256 fee);
+    event SwapFeeSet(uint256 fee);
 
     event ListingFeeSet(uint256 fee);
 
@@ -33,19 +33,29 @@ interface IBondingCurve {
 
     event AmmFactorySet(address ammFactory);
 
-    function initialize(address token, address superToken, uint256 creationFee, uint256 swapFee, uint256 listingFee, uint256 listingReward, uint256 donationRate, address ammFactory) external;
+    function initialize(address token, address quoteToken, uint256 creationFee, uint256 swapFee, uint256 listingFee, uint256 listingReward, uint256 donationRate, address ammFactory) external;
 
     function owner() external view returns (address);
 
-    function tokens() external view returns (address token0, address token1);
+    function token0() external view returns (address);
 
-    function fees() external view returns (uint256 amount0, uint256 amount1);    
+    function token1() external view returns (address);
+
+    function creationFee() external view returns (uint256);
+
+    function swapFee() external view returns (uint256);
+
+    function listingFee() external view returns (uint256);
+    
+    function listingReward() external view returns (uint256);
+
+    function donationRate() external view returns (uint256);
+
+    function ammFactory() external view returns (address);
+
+    function amm() external view returns (address);
 
     function listed() external view returns (bool);
-
-    function amm() external view returns (address ammFactory, address ammPool);
-
-    function donated() external view returns (bool);
 
     function swap(uint256 amount0Out, uint256 amount1Out, address to) external;
 
@@ -57,9 +67,9 @@ interface IBondingCurve {
 
     function setOwner(address) external;
 
-    function setBondingCurveCreationFee(uint256 fee) external;
+    function setCreationFee(uint256 fee) external;
 
-    function setBondingCurveSwapFee(uint256 fee) external;
+    function setSwapFee(uint256 fee) external;
 
     function setListingFee(uint256 fee) external;
 

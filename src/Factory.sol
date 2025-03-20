@@ -9,6 +9,7 @@ contract Factory is IFactory {
     uint256 private constant DEFAULT_ERC20_SUPPLY = 1e27;
 
     address public override owner;
+    address public override nativeToken;
     mapping(address superOrSubToken => address bondingCurve) public override getBondingCurve;
     mapping(address subToken => address superToken) public override getSuperToken;
     mapping(address superToken=> address[] subTokens) public override getSubTokens;
@@ -20,9 +21,10 @@ contract Factory is IFactory {
     uint256 public override defaultDonationRate;
     address public override defaultAmmFactory;
 
-    constructor() {
+    constructor(address _nativeToken) {
         owner = msg.sender;
-
+        nativeToken = _nativeToken;
+        
         emit OwnerSet(msg.sender);
     }
 
@@ -52,7 +54,7 @@ contract Factory is IFactory {
 
         bondingCurve = address(new BondingCurve());
         Token token = new Token(symbol, name, DEFAULT_ERC20_SUPPLY, bondingCurve);
-        IBondingCurve(bondingCurve).initialize(token, superToken, defaultCreationFee, defaultSwapFee, defaultListingFee, defaultListingReward, defaultDonationRate, defaultAmmFactory);
+        IBondingCurve(bondingCurve).initialize(token, isCreatingSuperToken ? nativeToken : superToken, defaultCreationFee, defaultSwapFee, defaultListingFee, defaultListingReward, defaultDonationRate, defaultAmmFactory);
 
         getBondingCurve[token] = bondingCurve;
         if (isCreatingSuperToken) {
@@ -75,6 +77,7 @@ contract Factory is IFactory {
         require(_owner != owner, 'TF01');
         require(_owner != address(0), 'TF02');
         owner = _owner;
+        
         emit OwnerSet(_owner);
     }
 }
