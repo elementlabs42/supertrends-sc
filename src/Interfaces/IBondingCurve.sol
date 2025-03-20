@@ -4,6 +4,8 @@ pragma solidity ^0.8.29;
 interface IBondingCurve {
     event OwnerSet(address owner);
 
+    event ListingOracleSet(address listingOracle);
+
     event Swap(
         address indexed sender,
         uint256 amount0In,
@@ -33,9 +35,11 @@ interface IBondingCurve {
 
     event AmmFactorySet(address ammFactory);
 
-    function initialize(address token, address quoteToken, uint256 creationFee, uint256 swapFee, uint256 listingFee, uint256 listingReward, uint256 donationRate, address ammFactory) external;
+    function initialize(address listingOracle, address token, address quoteToken, uint256 creationFee, uint256 swapFee, uint256 listingFee, uint256 listingReward, uint256 donationRate, address ammFactory) external;
 
     function owner() external view returns (address);
+
+    function listingOracle() external view returns (address);
 
     function token0() external view returns (address);
 
@@ -55,6 +59,14 @@ interface IBondingCurve {
 
     function amm() external view returns (address);
 
+    function reserve0() external view returns (uint256);
+
+    function reserve1() external view returns (uint256);
+
+    function accumulatedFees0() external view returns (uint256);
+
+    function accumulatedFees1() external view returns (uint256);
+
     function listed() external view returns (bool);
 
     function swap(uint256 amount0Out, uint256 amount1Out, address to) external;
@@ -66,6 +78,8 @@ interface IBondingCurve {
     function donate(address to) external returns (uint256 amount);
 
     function setOwner(address) external;
+
+    function setListingOracle(address listingOracle) external;
 
     function setCreationFee(uint256 fee) external;
 

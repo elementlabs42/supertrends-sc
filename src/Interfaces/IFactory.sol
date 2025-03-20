@@ -18,7 +18,13 @@ interface IFactory {
 
     event DefaultAmmFactorySet(address ammFactory);
 
+    event ListingThresholdSet(uint256 threshold);
+
     function owner() external view returns (address);
+
+    function nativeToken() external view returns (address);
+
+    function listingThreshold() external view returns (uint256);
 
     function allTokens(uint256) external view returns (address superOrSubToken);
 
@@ -26,7 +32,11 @@ interface IFactory {
 
     function getSuperToken(address subToken) external view returns (address superToken);
 
+    function isToken(address superOrSubToken) external view returns (bool);
+
     function isSuperToken(address superToken) external view returns (bool);
+
+    function isSubToken(address superToken) external view returns (bool);
 
     function getBondingCurve(address superOrSubToken) external view returns (address bondingCurve);
 
@@ -71,4 +81,8 @@ interface IFactory {
     function setDefaultAmmFactory(address ammFactory) external;
 
     function setAmmFactory(address superOrSubToken, address ammFactory) external;
+
+    function setListingOracle(address superOrSubToken, address listingOracle) external;
+
+    function setListingThreshold(uint256 threshold) external;
 }

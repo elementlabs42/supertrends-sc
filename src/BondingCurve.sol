@@ -3,21 +3,23 @@ pragma solidity ^0.8.29;
 
 import {IBondingCurve} from "./Interfaces/iBondingCurve.sol";
 import {IERC20} from "./Interfaces/IERC20.sol";
+import {IListingOracle} from "./Interfaces/IListingOracle.sol";
 
 contract BondingCurve is IBondingCurve {
 
     address public override owner;
-    address public token0;
-    address public token1;
-    uint256 public creationFee;
-    uint256 public swapFee;
-    uint256 public listingFee;
-    uint256 public listingReward;
-    uint256 public donationRate;
-    address public ammFactory;
-    address public amm;
-    uint256 public accumulatedFees0;
-    uint256 public accumulatedFees1;
+    address public override listingOracle;
+    address public override token0;
+    address public override token1;
+    uint256 public override creationFee;
+    uint256 public override swapFee;
+    uint256 public override listingFee;
+    uint256 public override listingReward;
+    uint256 public override donationRate;
+    address public override ammFactory;
+    address public override amm;
+    uint256 public override accumulatedFees0;
+    uint256 public override accumulatedFees1;
 
     constructor() {
         owner = msg.sender;
@@ -25,9 +27,12 @@ contract BondingCurve is IBondingCurve {
         emit OwnerSet(msg.sender);
     }
 
-    function initialize(address token, address quoteToken, uint256 _creationFee, uint256 _swapFee, uint256 _listingFee, uint256 _listingReward, uint256 _donationRate, address _ammFactory) external {
-        token0 = token;
-        token1 = quoteToken;
+    function initialize(address _listingOracle, address _token, address _quoteToken, uint256 _creationFee, uint256 _swapFee, uint256 _listingFee, uint256 _listingReward, uint256 _donationRate, address _ammFactory) external {
+        require(msg.sender == owner, 'TF00');
+
+        listingOracle = _listingOracle;
+        token0 = _token;
+        token1 = _quoteToken;
         creationFee = _creationFee;
         swapFee = _swapFee;
         listingFee = _listingFee;
@@ -43,11 +48,15 @@ contract BondingCurve is IBondingCurve {
         emit AmmFactorySet(_ammFactory);
     }
 
-    function accumulatedFees() external view returns (uint256 amount0, uint256 amount1) {
-        return (0, 0);
+    function reserve0() public view override returns (uint256) {
+        return IERC20(token0).balanceOf(address(this)) - accumulatedFees0;
     }
 
-    function listed() public view returns (bool) {
+    function reserve1() public view override returns (uint256) {
+        return IERC20(token1).balanceOf(address(this)) - accumulatedFees1;
+    }
+
+    function listed() public view override returns (bool) {
         return amm != address(0);
     }
 
@@ -61,8 +70,8 @@ contract BondingCurve is IBondingCurve {
 
     function listToken() external override {
         require(!listed(), 'TF01');
-        // require(token0 != address(0) && token1 != address(0), 'TF02');
-        // require(token0 != token1, 'TF03');
+        require(IListingOracle(listingOracle).meetsListingRequirements(token0, token1, reserve0(), reserve1()), 'TF02');
+
     }
 
     function claimFees(address to) external override {
@@ -95,6 +104,15 @@ contract BondingCurve is IBondingCurve {
         owner = _owner;
 
         emit OwnerSet(_owner);
+    }
+
+    function setListingOracle(address _listingOracle) external override {
+        require(msg.sender == owner, 'TF00');
+        require(_listingOracle != listingOracle, 'TF01');
+        require(_listingOracle != address(0), 'TF02');
+        listingOracle = _listingOracle;
+
+        emit ListingOracleSet(_listingOracle);
     }
 
     function setCreationFee(uint256 _creationFee) external override {
