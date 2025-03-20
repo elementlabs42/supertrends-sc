@@ -86,6 +86,33 @@ abstract contract UUPSUpgradeable is Initializable, IERC1822Proxiable {
     }
 
     /**
+     * @dev Get the admin of the contract.
+     *
+     * @return The admin of the contract.
+     */
+    function getAdmin() public view virtual returns (address) {
+        return ERC1967Utils.getAdmin();
+    }
+
+    /**
+     * @dev Change the admin of the contract.
+     *
+     * Emits an {AdminChanged} event.
+     */
+    function changeAdmin(address newAdmin) public onlyAdmin {
+        ERC1967Utils.changeAdmin(newAdmin);
+    }
+
+    /**
+     * @dev Get the implementation of the contract.
+     *
+     * @return The implementation of the contract.
+     */
+    function getImplementation() public view virtual returns (address) {
+        return ERC1967Utils.getImplementation();
+    }
+
+    /**
      * @dev Upgrade the implementation of the proxy to `newImplementation`, and subsequently execute the function call
      * encoded in `data`.
      *
@@ -98,15 +125,6 @@ abstract contract UUPSUpgradeable is Initializable, IERC1822Proxiable {
     function upgradeToAndCall(address newImplementation, bytes memory data) public payable virtual onlyProxy {
         _authorizeUpgrade(newImplementation);
         _upgradeToAndCallUUPS(newImplementation, data);
-    }
-
-    /**
-     * @dev Change the admin of the contract.
-     *
-     * Emits an {AdminChanged} event.
-     */
-    function changeAdmin(address newAdmin) public onlyAdmin {
-        ERC1967Utils.changeAdmin(newAdmin);
     }
 
     /**

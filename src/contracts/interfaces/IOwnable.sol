@@ -8,7 +8,7 @@ interface IOwnable {
     error OwnableSameValueAlreadySet();
     error OwnableUnauthorizedOwner(address _owner);
 
-    function owner() external view returns (address _owner);
+    function getOwner() external view returns (address _owner);
 
     function setOwner(address _owner) external;
 }

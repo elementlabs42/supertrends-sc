@@ -13,13 +13,13 @@ abstract contract Ownable is IOwnable {
     bytes32 private constant _OWNER_SLOT = 0x9016d09d72d40fdae2fd8ceac6b6234c7706214fd39c1cd1e609a0528c199300;
 
     modifier onlyOwner() {
-        if (msg.sender != owner()) {
+        if (msg.sender != getOwner()) {
             revert OwnableUnauthorizedOwner(msg.sender);
         }
         _;
     }
 
-    function owner() public view virtual returns (address __owner) {
+    function getOwner() public view virtual returns (address __owner) {
         assembly {
             __owner := sload(_OWNER_SLOT)
         }
@@ -33,7 +33,7 @@ abstract contract Ownable is IOwnable {
     }
 
     function _setOwner(address newOwner) internal virtual {
-        if (newOwner == owner()) {
+        if (newOwner == getOwner()) {
             revert OwnableSameValueAlreadySet();
         }
 
