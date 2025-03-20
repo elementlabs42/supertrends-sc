@@ -13,6 +13,12 @@ contract Factory is IFactory {
     mapping(address subToken => address superToken) public override getSuperToken;
     mapping(address superToken=> address[] subTokens) public override getSubTokens;
     address[] public override allTokens;
+    uint256 public override defaultCreationFee;
+    uint256 public override defaultSwapFee;
+    uint256 public override defaultListingFee;
+    uint256 public override defaultListingReward;
+    uint256 public override defaultDonationRate;
+    address public override defaultAmmFactory;
 
     constructor() {
         owner = msg.sender;
@@ -46,7 +52,7 @@ contract Factory is IFactory {
 
         bondingCurve = address(new BondingCurve());
         ERC20 token = new ERC20(symbol, name, bondingCurve, DEFAULT_ERC20_SUPPLY);
-        IBondingCurve(bondingCurve).initialize(token, superToken, creationFee, swapFee, listingFee, listingReward, donationRate, ammFactory);
+        IBondingCurve(bondingCurve).initialize(token, superToken, defaultCreationFee, defaultSwapFee, defaultListingFee, defaultListingReward, defaultDonationRate, defaultAmmFactory);
 
         getBondingCurve[token] = bondingCurve;
         if (isCreatingSuperToken) {
