@@ -8,13 +8,15 @@ import { IERC20Capped } from './interfaces/IERC20Capped.sol';
 contract TrendToken is ERC20Permit, Ownable, IERC20Capped {
     uint256 private immutable _cap;
 
-    constructor(string memory name_, string memory symbol_, uint256 cap_) ERC20Permit(name_, symbol_) {
+    constructor(string memory name_, string memory symbol_, uint256 cap_, address mintTo) ERC20Permit(name_, symbol_) {
         _setOwner(msg.sender);
 
         if (cap_ == 0) {
             revert ERC20InvalidCap(0);
         }
         _cap = cap_;
+
+        _mint(mintTo, cap_);
     }
 
     function cap() public view override returns (uint256) {
