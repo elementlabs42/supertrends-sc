@@ -32,9 +32,9 @@ interface IFactory {
 
     function getAMM(address superOrSubToken) external view returns (address amm);
 
-    function createSuperToken(string memory symbol, string memory name) external returns (address superToken);
+    function createSuperToken(string memory symbol, string memory name) external returns (address superToken, address bondingCurve);
 
-    function createSubToken(string memory symbol, string memory name, address superToken) external returns (address subToken);
+    function createSubToken(string memory symbol, string memory name, address superToken) external returns (address subToken, address bondingCurve);
 
     function buyToken(address superOrSubToken, uint256 amount) external payable;
 

@@ -33,6 +33,8 @@ interface IBondingCurve {
 
     event AmmFactorySet(address ammFactory);
 
+    function initialize(address token, address superToken, uint256 creationFee, uint256 swapFee, uint256 listingFee, uint256 listingReward, uint256 donationRate, address ammFactory) external;
+
     function owner() external view returns (address);
 
     function tokens() external view returns (address token0, address token1);
