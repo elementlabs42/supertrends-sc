@@ -64,7 +64,6 @@ contract Factory is IFactory, IListingOracle {
         string memory name,
         address superToken
     ) private override returns (address token, address bondingCurve) {
-        require(msg.sender == owner, 'TF00');
         bool isCreatingSuperToken = superToken == address(0);
         require(isCreatingSuperToken || isSuperToken(superToken), 'TF3B');
 
