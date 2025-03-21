@@ -2,9 +2,11 @@
 pragma solidity ^0.8.29;
 
 import { BondingCurve } from './BondingCurve.sol';
+
 import { TrendToken } from './TrendToken.sol';
 import { Ownable } from './abstracts/Ownable.sol';
 import { UUPSUpgradeable } from './abstracts/UUPSUpgradeable.sol';
+import { IBondingCurve } from './interfaces/IBondingCurve.sol';
 import { IFactory } from './interfaces/IFactory.sol';
 import { ERC1967Utils } from './libraries/ERC1967Utils.sol';
 
@@ -147,7 +149,7 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
 
         address bondingCurve = address(new BondingCurve());
         token = address(new TrendToken(name, symbol, DEFAULT_ERC20_SUPPLY, bondingCurve));
-        // initialize bonding curve: associate a token with its bonding curve
+        IBondingCurve(bondingCurve).initialize(token, token); // TODO: Add reserve token
 
         _bondingCurves[token] = bondingCurve;
         _allTokens.push(token);
