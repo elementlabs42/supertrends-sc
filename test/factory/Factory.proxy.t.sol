@@ -21,7 +21,7 @@ contract FactoryProxyTest is FactoryTestBase {
         assertEq(factory.tokenCreationFee(), DEFAULT_TOKEN_CREATION_FEE);
         assertEq(factory.tokenTradeFee(), DEFAULT_TOKEN_TRADE_FEE);
         assertEq(factory.listingFee(), DEFAULT_LISTING_FEE);
-        assertEq(factory.creatorRewadr(), DEFAULT_CREATOR_REWARD);
+        assertEq(factory.creatorReward(), DEFAULT_CREATOR_REWARD);
         assertEq(factory.donationRate(), DEFAULT_DONATION_RATE);
         assertEq(factory.listingRate(), DEFAULT_LISTING_RATE);
     }

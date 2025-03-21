@@ -7,7 +7,7 @@ interface IFactory {
     event TokenTradeFeeSet(uint256 fee);
     event TokenCreationFeeSet(uint256 fee);
     event ListingFeeSet(uint256 fee);
-    event CreatorRewadrSet(uint256 reward);
+    event CreatorRewardSet(uint256 reward);
     event ListingRateSet(uint256 rate);
     event DonationRateSet(uint256 rate);
 

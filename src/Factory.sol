@@ -23,7 +23,7 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
     uint256 public tokenCreationFee;
     uint256 public tokenTradeFee;
     uint256 public listingFee;
-    uint256 public creatorRewadr;
+    uint256 public creatorReward;
     uint256 public listingRate;
     uint256 public donationRate;
 
@@ -34,7 +34,7 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
         uint256 _tokenCreationFee,
         uint256 _tokenTradeFee,
         uint256 _listingFee,
-        uint256 _creatorRewadr,
+        uint256 _creatorReward,
         uint256 _listingRate,
         uint256 _donationRate
     ) public initializer {
@@ -44,7 +44,7 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
         tokenCreationFee = _tokenCreationFee;
         tokenTradeFee = _tokenTradeFee;
         listingFee = _listingFee;
-        creatorRewadr = _creatorRewadr;
+        creatorReward = _creatorReward;
         listingRate = _listingRate;
         donationRate = _donationRate;
     }
@@ -110,12 +110,12 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
         emit ListingFeeSet(fee);
     }
 
-    function setCreatorRewadr(uint256 reward) external onlyOwner {
-        if (reward == creatorRewadr) {
+    function setCreatorReward(uint256 reward) external onlyOwner {
+        if (reward == creatorReward) {
             revert FactorySameValueAlreadySet();
         }
-        creatorRewadr = reward;
-        emit CreatorRewadrSet(reward);
+        creatorReward = reward;
+        emit CreatorRewardSet(reward);
     }
 
     function setDonationRate(uint256 rate) external onlyOwner {
