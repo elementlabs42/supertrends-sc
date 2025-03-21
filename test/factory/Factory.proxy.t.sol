@@ -8,11 +8,10 @@ import { Initializable } from '../../src/contracts/abstracts/Initializable.sol';
 import { UUPSUpgradeable } from '../../src/contracts/abstracts/UUPSUpgradeable.sol';
 import { ERC1967Utils } from '../../src/contracts/libraries/ERC1967Utils.sol';
 
-import { FactoryTestBase } from './FactoryTestBase.t.sol';
-
 import { FactoryV2 } from '../utils/FactoryV2.t.sol';
 import { FactoryV3 } from '../utils/FactoryV3.t.sol';
 import { TestToken } from '../utils/TestToken.t.sol';
+import { FactoryTestBase } from './FactoryTestBase.t.sol';
 
 contract FactoryProxyTest is FactoryTestBase {
     function test_initialize_success() public view {
@@ -71,13 +70,13 @@ contract FactoryProxyTest is FactoryTestBase {
         );
         vm.stopPrank();
 
+        vm.expectRevert(abi.encodeWithSelector(Initializable.InvalidInitialization.selector));
+        newImplementation.initializeV2(address(this));
+
         // Assert
         FactoryV2 factoryV2 = FactoryV2(payable(proxy));
         assertEq(factoryV2.getImplementation(), address(newImplementation));
         assertEq(factoryV2.getOwner(), randomUser);
-
-        vm.expectRevert(abi.encodeWithSelector(Initializable.InvalidInitialization.selector));
-        newImplementation.initializeV2(address(this));
     }
 
     function test_upgrade_and_reinitialize_V3() public {
@@ -92,8 +91,8 @@ contract FactoryProxyTest is FactoryTestBase {
         vm.stopPrank();
 
         // Assert
-        FactoryV2 factoryV2 = FactoryV2(payable(proxy));
-        assertEq(factoryV2.getImplementation(), implementationV3);
-        assertEq(factoryV2.getOwner(), address(3));
+        FactoryV3 factoryV3 = FactoryV3(payable(proxy));
+        assertEq(factoryV3.getImplementation(), implementationV3);
+        assertEq(factoryV3.getOwner(), address(3));
     }
 }
