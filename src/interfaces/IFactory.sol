@@ -6,6 +6,10 @@ interface IFactory {
     event SubTokenCreated(address indexed subToken, address indexed superToken, address indexed creator);
     event TokenTradeFeeSet(uint256 fee);
     event TokenCreationFeeSet(uint256 fee);
+    event ListingFeeSet(uint256 fee);
+    event CreatorRewadrSet(uint256 reward);
+    event ListingRateSet(uint256 rate);
+    event DonationRateSet(uint256 rate);
 
     error FactoryMustBeSuperToken(address token);
     error FactorySameValueAlreadySet();

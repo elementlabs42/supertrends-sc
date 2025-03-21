@@ -13,7 +13,7 @@ import { ERC1967Utils } from './libraries/ERC1967Utils.sol';
  * Adding, removing, changing or rearranging these base contracts can result in a storage collision after a contract upgrade.
  */
 contract Factory is IFactory, Ownable, UUPSUpgradeable {
-    uint256 private constant DEFAULT_ERC20_SUPPLY = 1e27;
+    uint256 private constant DEFAULT_ERC20_SUPPLY = 1e27; // 1B
 
     mapping(address token => address bondingCurve) private _bondingCurves;
     mapping(address child => address parent) private _superTokens;
@@ -22,12 +22,31 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
 
     uint256 public tokenCreationFee;
     uint256 public tokenTradeFee;
+    uint256 public listingFee;
+    uint256 public creatorRewadr;
+    uint256 public listingRate;
+    uint256 public donationRate;
 
     constructor() initializer { }
 
-    function initialize(address _owner) public initializer {
+    function initialize(
+        address _owner,
+        uint256 _tokenCreationFee,
+        uint256 _tokenTradeFee,
+        uint256 _listingFee,
+        uint256 _creatorRewadr,
+        uint256 _listingRate,
+        uint256 _donationRate
+    ) public initializer {
         _setOwner(_owner);
         ERC1967Utils.changeAdmin(msg.sender);
+
+        tokenCreationFee = _tokenCreationFee;
+        tokenTradeFee = _tokenTradeFee;
+        listingFee = _listingFee;
+        creatorRewadr = _creatorRewadr;
+        listingRate = _listingRate;
+        donationRate = _donationRate;
     }
 
     function _authorizeUpgrade(address) internal view override onlyAdmin { }
@@ -81,6 +100,38 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
         }
         tokenTradeFee = fee;
         emit TokenTradeFeeSet(fee);
+    }
+
+    function setListingFee(uint256 fee) external onlyOwner {
+        if (fee == listingFee) {
+            revert FactorySameValueAlreadySet();
+        }
+        listingFee = fee;
+        emit ListingFeeSet(fee);
+    }
+
+    function setCreatorRewadr(uint256 reward) external onlyOwner {
+        if (reward == creatorRewadr) {
+            revert FactorySameValueAlreadySet();
+        }
+        creatorRewadr = reward;
+        emit CreatorRewadrSet(reward);
+    }
+
+    function setDonationRate(uint256 rate) external onlyOwner {
+        if (rate == donationRate) {
+            revert FactorySameValueAlreadySet();
+        }
+        donationRate = rate;
+        emit DonationRateSet(rate);
+    }
+
+    function setListingRate(uint256 rate) external onlyOwner {
+        if (rate == listingRate) {
+            revert FactorySameValueAlreadySet();
+        }
+        listingRate = rate;
+        emit ListingRateSet(rate);
     }
 
     function withdrawFees(address bondingCurve, address to, uint256 amount) external onlyOwner { }

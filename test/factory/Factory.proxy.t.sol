@@ -18,12 +18,18 @@ contract FactoryProxyTest is FactoryTestBase {
         // Assert
         assertEq(factory.getAdmin(), address(this));
         assertEq(factory.getOwner(), wallet);
+        assertEq(factory.tokenCreationFee(), DEFAULT_TOKEN_CREATION_FEE);
+        assertEq(factory.tokenTradeFee(), DEFAULT_TOKEN_TRADE_FEE);
+        assertEq(factory.listingFee(), DEFAULT_LISTING_FEE);
+        assertEq(factory.creatorRewadr(), DEFAULT_CREATOR_REWARD);
+        assertEq(factory.donationRate(), DEFAULT_DONATION_RATE);
+        assertEq(factory.listingRate(), DEFAULT_LISTING_RATE);
     }
 
     function test_initialize_revert_if_already_initialized() public {
         // Assert
         vm.expectRevert(abi.encodeWithSelector(Initializable.InvalidInitialization.selector));
-        factory.initialize(address(this));
+        factory.initialize(address(this), 1e18, 1e18, 1e18, 1e18, 1e18, 1e18);
     }
 
     function test_upgrade_revert_if_not_admin() public {
