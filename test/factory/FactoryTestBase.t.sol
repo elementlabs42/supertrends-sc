@@ -2,8 +2,8 @@
 
 pragma solidity 0.8.29;
 
-import { Factory } from '../../src/contracts/Factory.sol';
-import { UUPSProxy } from '../../src/contracts/UUPSProxy.sol';
+import { Factory } from '../../src/Factory.sol';
+import { UUPSProxy } from '../../src/UUPSProxy.sol';
 import { Test } from 'forge-std/Test.sol';
 
 abstract contract FactoryTestBase is Test {

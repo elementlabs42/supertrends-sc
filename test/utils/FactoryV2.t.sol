@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.29;
 
-import { Ownable } from '../../src/contracts/abstracts/Ownable.sol';
-import { UUPSUpgradeable } from '../../src/contracts/abstracts/UUPSUpgradeable.sol';
-import { ERC1967Utils } from '../../src/contracts/libraries/ERC1967Utils.sol';
+import { Ownable } from '../../src/abstracts/Ownable.sol';
+import { UUPSUpgradeable } from '../../src/abstracts/UUPSUpgradeable.sol';
+import { ERC1967Utils } from '../../src/libraries/ERC1967Utils.sol';
 
 contract FactoryV2 is Ownable, UUPSUpgradeable {
     constructor() reinitializer(2) { }

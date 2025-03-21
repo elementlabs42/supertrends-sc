@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.29;
 
-import { Factory } from '../../src/contracts/Factory.sol';
+import { Factory } from '../../src/Factory.sol';
 
-import { UUPSProxy } from '../../src/contracts/UUPSProxy.sol';
-import { Initializable } from '../../src/contracts/abstracts/Initializable.sol';
-import { UUPSUpgradeable } from '../../src/contracts/abstracts/UUPSUpgradeable.sol';
-import { ERC1967Utils } from '../../src/contracts/libraries/ERC1967Utils.sol';
+import { UUPSProxy } from '../../src/UUPSProxy.sol';
+import { Initializable } from '../../src/abstracts/Initializable.sol';
+import { UUPSUpgradeable } from '../../src/abstracts/UUPSUpgradeable.sol';
+import { ERC1967Utils } from '../../src/libraries/ERC1967Utils.sol';
 
 import { FactoryV2 } from '../utils/FactoryV2.t.sol';
 import { FactoryV3 } from '../utils/FactoryV3.t.sol';
