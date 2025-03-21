@@ -7,7 +7,7 @@ interface IFactory {
     event TokenTradeFeeSet(uint256 fee);
     event TokenCreationFeeSet(uint256 fee);
 
-    error FactoryMustBeSuperToken(address subToken);
+    error FactoryMustBeSuperToken(address token);
     error FactorySameValueAlreadySet();
 
     function getBondingCurve(address token) external view returns (address);

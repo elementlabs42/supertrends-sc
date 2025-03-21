@@ -11,10 +11,6 @@ import { ERC1967Utils } from './libraries/ERC1967Utils.sol';
 /**
  * @dev IMPORTANT: This contract implements a proxy pattern. Do not modify inheritance list in this contract.
  * Adding, removing, changing or rearranging these base contracts can result in a storage collision after a contract upgrade.
- *
- * IMPORTANT: This contract is used as parent contract in contracts that implement a proxy pattern.
- * Adding, removing, changing or rearranging state variables in this contract can result in a storage collision
- * in child contracts in case of a contract upgrade.
  */
 contract Factory is IFactory, Ownable, UUPSUpgradeable {
     uint256 private constant DEFAULT_ERC20_SUPPLY = 1e27;
@@ -34,7 +30,7 @@ contract Factory is IFactory, Ownable, UUPSUpgradeable {
         ERC1967Utils.changeAdmin(msg.sender);
     }
 
-    function _authorizeUpgrade(address) internal override onlyAdmin { }
+    function _authorizeUpgrade(address) internal view override onlyAdmin { }
 
     function getAllTokens() external view returns (address[] memory) {
         return _allTokens;

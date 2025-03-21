@@ -12,5 +12,5 @@ contract FactoryV2 is Ownable, UUPSUpgradeable {
         _setOwner(_owner);
     }
 
-    function _authorizeUpgrade(address) internal override onlyAdmin { }
+    function _authorizeUpgrade(address) internal view override onlyAdmin { }
 }
