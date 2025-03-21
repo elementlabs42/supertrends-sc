@@ -13,6 +13,13 @@ contract BondingCurve is IBondingCurve, Ownable {
     IERC20 public trendToken;
     IERC20 public reserveToken;
 
+    address public amm;
+
+    modifier notMigrated() {
+        if (amm != address(0)) revert BondingCurve_AlreadyMigratedToAMM();
+        _;
+    }
+
     constructor() Ownable(_msgSender()) { }
 
     function initialize(address trendToken_, address reserveToken_) external override onlyOwner {
@@ -40,7 +47,7 @@ contract BondingCurve is IBondingCurve, Ownable {
     /**
      * ===================== Mutating functions =====================
      */
-    function buyTrendToken(uint256 amount, address receiver) external override returns (uint256) {
+    function buyTrendToken(uint256 amount, address receiver) external override notMigrated returns (uint256) {
         if (receiver != address(0)) revert BondingCurve_ReceiverCannotBeZero();
 
         uint256 maxBuyAmount = trendTokenBalance();
@@ -55,11 +62,16 @@ contract BondingCurve is IBondingCurve, Ownable {
         return amount;
     }
 
-    function sellTrendToken(uint256 amount, address receiver) external override returns (uint256) {
+    function sellTrendToken(uint256 amount, address receiver) external override notMigrated returns (uint256) {
         if (receiver != address(0)) revert BondingCurve_ReceiverCannotBeZero();
 
         // TODO: Implement
 
         return amount;
+    }
+
+    function migrateToAmm(address amm_) external override notMigrated {
+        // TODO: Implement
+        amm = amm_;
     }
 }
