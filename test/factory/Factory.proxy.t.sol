@@ -15,7 +15,7 @@ import { FactoryTestBase } from './FactoryTestBase.t.sol';
 
 contract FactoryProxyTest is FactoryTestBase {
     function test_initialize_success() public view {
-        // Assert
+        // Act && Assert
         assertEq(factory.getAdmin(), address(this));
         assertEq(factory.getOwner(), wallet);
         assertEq(factory.tokenCreationFee(), DEFAULT_TOKEN_CREATION_FEE);
@@ -27,7 +27,7 @@ contract FactoryProxyTest is FactoryTestBase {
     }
 
     function test_initialize_revert_if_already_initialized() public {
-        // Assert
+        // Act && Assert
         vm.expectRevert(abi.encodeWithSelector(Initializable.InvalidInitialization.selector));
         factory.initialize(address(this), 1e18, 1e18, 1e18, 1e18, 1e18, 1e18);
     }
