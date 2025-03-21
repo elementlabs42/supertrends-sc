@@ -13,7 +13,16 @@ interface IBondingCurve {
     /**
      * ==================== Getters ====================
      */
-    function amm() external returns (address);
+
+    /**
+     * @notice Returns the address of the AMM pair the liquidity was migrated to.
+     */
+    function ammPair() external returns (address);
+
+    /**
+     * @notice Returns the amount of accumulated fees expressed in trend token.
+     */
+    function accumulatedFees() external returns (uint256);
 
     /**
      * =============== Mutating functions ==============
@@ -27,15 +36,21 @@ interface IBondingCurve {
     /**
      * @notice Executes a transaction to buy trend token for reserve token.
      */
-    function buyTrendToken(uint256 amount, address receiver) external returns (uint256);
+    function buyTrendToken(uint256 amount, address receiver) external returns (uint256 amountBought);
 
     /**
      * @notice Executes a transaction to sell trend token for reserve token.
      */
-    function sellTrendToken(uint256 amount, address receiver) external returns (uint256);
+    function sellTrendToken(uint256 amount, address receiver) external returns (uint256 amountSold);
 
     /**
-     * @notice Migrate liquidity to an AMM.
+     * @notice Migrates liquidity to an AMM.
+     * @return pair Address of the created AMM pair.
      */
-    function migrateToAmm(address amm) external;
+    function migrateToAmm(address ammFactory) external returns (address pair);
+
+    /**
+     * @notice Claim trading fees in trend token. Can only be called by the owner.
+     */
+    function claimFees() external;
 }

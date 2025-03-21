@@ -13,10 +13,12 @@ contract BondingCurve is IBondingCurve, Ownable {
     IERC20 public trendToken;
     IERC20 public reserveToken;
 
-    address public amm;
+    uint256 public accumulatedFees; // Fees tracked in terms of trend token
+
+    address public ammPair;
 
     modifier notMigrated() {
-        if (amm != address(0)) revert BondingCurve_AlreadyMigratedToAMM();
+        if (ammPair != address(0)) revert BondingCurve_AlreadyMigratedToAMM();
         _;
     }
 
@@ -59,6 +61,8 @@ contract BondingCurve is IBondingCurve, Ownable {
         reserveToken.safeTransferFrom(_msgSender(), address(this), reserveAmount);
         trendToken.safeTransfer(receiver, amount);
 
+        // TODO: Update accumulatedFees
+
         return amount;
     }
 
@@ -70,8 +74,12 @@ contract BondingCurve is IBondingCurve, Ownable {
         return amount;
     }
 
-    function migrateToAmm(address amm_) external override notMigrated {
+    function migrateToAmm(address ammFactory) external override notMigrated returns (address pair) {
         // TODO: Implement
-        amm = amm_;
+    }
+
+    function claimFees() external override {
+        trendToken.safeTransfer(owner(), accumulatedFees);
+        accumulatedFees = 0;
     }
 }
